@@ -1,0 +1,24 @@
+# Build results
+bin/
+obj/
+
+# Rider specific
+.idea/
+
+# User-specific files
+*.user
+*.suo
+
+# Logs
+*.log
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+
+# Visual Studio cache
+.vs/
+
+# Publish
+publish/

@@ -1,0 +1,49 @@
+@page
+@model GoalRoad.Pages.Carreiras.IndexModel
+@{
+    ViewData["Title"] = "Carreiras";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-briefcase"></i> Carreiras</h1>
+        <span class="badge bg-success fs-6">Total: @(Model.Carreiras?.Total ?? 0)</span>
+    </div>
+    
+    @if (Model.Carreiras?.Data != null && Model.Carreiras.Data.Any())
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th><i class="bi bi-hash"></i> ID</th>
+                                <th><i class="bi bi-card-heading"></i> Título</th>
+                                <th><i class="bi bi-file-text"></i> Descrição</th>
+                                <th><i class="bi bi-tag"></i> Categoria</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var c in Model.Carreiras.Data)
+                            {
+                                <tr>
+                                    <td>@c.IdCarreira</td>
+                                    <td><strong>@c.TituloCarreira</strong></td>
+                                    <td>@(string.IsNullOrEmpty(c.DescricaoCarreira) ? "-" : (c.DescricaoCarreira.Length > 50 ? c.DescricaoCarreira.Substring(0, 50) + "..." : c.DescricaoCarreira))</td>
+                                    <td><span class="badge bg-secondary">@(c.Categoria?.NomeCategoria ?? "-")</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i> Nenhuma carreira encontrada.
+        </div>
+    }
+</div>

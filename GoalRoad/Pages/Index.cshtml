@@ -1,0 +1,108 @@
+@page
+@model GoalRoad.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+                <h1 class="display-4">
+                    <i class="bi bi-bullseye"></i> Bem-vindo ao GoalRoad
+                </h1>
+                <p class="lead">Sua plataforma para gerenciar carreiras, tecnologias e roadmaps de aprendizado.</p>
+                <hr class="my-4" style="border-color: rgba(255,255,255,0.3);" />
+                <p>Explore as funcionalidades disponíveis através do menu de navegação.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-people text-primary"></i> Usuários
+                    </h5>
+                    <p class="card-text">Gerencie os usuários do sistema.</p>
+                    <a href="/Usuarios" class="btn btn-primary">
+                        <i class="bi bi-arrow-right"></i> Ver Usuários
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-briefcase text-success"></i> Carreiras
+                    </h5>
+                    <p class="card-text">Visualize e gerencie as carreiras disponíveis.</p>
+                    <a href="/Carreiras" class="btn btn-success">
+                        <i class="bi bi-arrow-right"></i> Ver Carreiras
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-code-slash text-info"></i> Tecnologias
+                    </h5>
+                    <p class="card-text">Explore as tecnologias cadastradas.</p>
+                    <a href="/Tecnologias" class="btn btn-info text-white">
+                        <i class="bi bi-arrow-right"></i> Ver Tecnologias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-tags text-warning"></i> Categorias
+                    </h5>
+                    <p class="card-text">Gerencie as categorias de carreiras.</p>
+                    <a href="/Categorias" class="btn btn-warning">
+                        <i class="bi bi-arrow-right"></i> Ver Categorias
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-rss text-danger"></i> Feed
+                    </h5>
+                    <p class="card-text">Visualize os feeds personalizados dos usuários.</p>
+                    <a href="/Feed" class="btn btn-danger">
+                        <i class="bi bi-arrow-right"></i> Ver Feed
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="bi bi-file-code text-secondary"></i> API Documentation
+                    </h5>
+                    <p class="card-text">Acesse a documentação completa da API.</p>
+                    <a href="/swagger" class="btn btn-secondary" target="_blank">
+                        <i class="bi bi-arrow-right"></i> Swagger UI
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

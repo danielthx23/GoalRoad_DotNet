@@ -1,0 +1,47 @@
+@page
+@model GoalRoad.Pages.Categorias.IndexModel
+@{
+    ViewData["Title"] = "Categorias";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-tags"></i> Categorias</h1>
+        <span class="badge bg-warning fs-6">Total: @(Model.Categorias?.Total ?? 0)</span>
+    </div>
+    
+    @if (Model.Categorias?.Data != null && Model.Categorias.Data.Any())
+    {
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="table-dark">
+                            <tr>
+                                <th><i class="bi bi-hash"></i> ID</th>
+                                <th><i class="bi bi-tag"></i> Nome</th>
+                                <th><i class="bi bi-file-text"></i> Descrição</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var c in Model.Categorias.Data)
+                            {
+                                <tr>
+                                    <td>@c.IdCategoria</td>
+                                    <td><strong>@c.NomeCategoria</strong></td>
+                                    <td>@(string.IsNullOrEmpty(c.DescricaoCategoria) ? "-" : (c.DescricaoCategoria.Length > 80 ? c.DescricaoCategoria.Substring(0, 80) + "..." : c.DescricaoCategoria))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info" role="alert">
+            <i class="bi bi-info-circle"></i> Nenhuma categoria encontrada.
+        </div>
+    }
+</div>

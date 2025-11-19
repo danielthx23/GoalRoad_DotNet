@@ -1,0 +1,55 @@
+# Build results
+**/bin/
+**/obj/
+**/out/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Test results
+**/TestResults/
+**/coverage/
+
+# NuGet
+**/*.nupkg
+**/packages/
+*.nuget.props
+*.nuget.targets
+
+# Docker
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+README*
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# Project specific
+GoalRoad.Tests/
+
+
