@@ -1,23 +1,22 @@
 using Swashbuckle.AspNetCore.Filters;
 using GoalRoad.Application.DTOs;
-using GoalRoad.Domain.Entities;
 
 namespace GoalRoad.Doc.Samples
 {
-    public class TecnologiaResponseListSample : IExamplesProvider<IEnumerable<TecnologiaEntity>>
+    public class TecnologiaResponseListSample : IExamplesProvider<IEnumerable<TecnologiaDto>>
     {
-        public IEnumerable<TecnologiaEntity> GetExamples()
+        public IEnumerable<TecnologiaDto> GetExamples()
         {
-            return new List<TecnologiaEntity>
+            return new List<TecnologiaDto>
             {
-                new TecnologiaEntity
+                new TecnologiaDto
                 {
                     IdTecnologia = 1,
                     NomeTecnologia = "C#",
                     DescricaoTecnologia = "Linguagem de programação da Microsoft",
                     LogoTecnologia = "https://example.com/csharp.png"
                 },
-                new TecnologiaEntity
+                new TecnologiaDto
                 {
                     IdTecnologia = 2,
                     NomeTecnologia = "ASP.NET Core",
@@ -28,11 +27,11 @@ namespace GoalRoad.Doc.Samples
         }
     }
 
-    public class TecnologiaResponseSample : IExamplesProvider<TecnologiaEntity>
+    public class TecnologiaResponseSample : IExamplesProvider<TecnologiaDto>
     {
-        public TecnologiaEntity GetExamples()
+        public TecnologiaDto GetExamples()
         {
-            return new TecnologiaEntity
+            return new TecnologiaDto
             {
                 IdTecnologia = 1,
                 NomeTecnologia = "C#",
@@ -48,7 +47,6 @@ namespace GoalRoad.Doc.Samples
         {
             return new TecnologiaDto
             {
-                IdTecnologia = 0,
                 NomeTecnologia = "C#",
                 DescricaoTecnologia = "Linguagem de programação da Microsoft",
                 LogoTecnologia = "https://example.com/csharp.png"

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GoalRoad.Application.UseCases.Interfaces;
 using GoalRoad.Application.DTOs;
@@ -10,6 +11,7 @@ namespace GoalRoad.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioUseCase _useCase;
@@ -38,6 +40,7 @@ namespace GoalRoad.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [SwaggerRequestExample(typeof(UsuarioDto), typeof(UsuarioRequestSample))]
         public async Task<ActionResult<UsuarioDto?>> Post(UsuarioDto dto)
         {

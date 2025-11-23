@@ -1,22 +1,21 @@
 using Swashbuckle.AspNetCore.Filters;
 using GoalRoad.Application.DTOs;
-using GoalRoad.Domain.Entities;
 
 namespace GoalRoad.Doc.Samples
 {
-    public class CategoriaResponseListSample : IExamplesProvider<IEnumerable<CategoriaEntity>>
+    public class CategoriaResponseListSample : IExamplesProvider<IEnumerable<CategoriaDto>>
     {
-        public IEnumerable<CategoriaEntity> GetExamples()
+        public IEnumerable<CategoriaDto> GetExamples()
         {
-            return new List<CategoriaEntity>
+            return new List<CategoriaDto>
             {
-                new CategoriaEntity
+                new CategoriaDto
                 {
                     IdCategoria = 1,
                     NomeCategoria = "Desenvolvimento",
                     DescricaoCategoria = "Conteúdos relacionados a desenvolvimento de software"
                 },
-                new CategoriaEntity
+                new CategoriaDto
                 {
                     IdCategoria = 2,
                     NomeCategoria = "DevOps",
@@ -26,11 +25,11 @@ namespace GoalRoad.Doc.Samples
         }
     }
 
-    public class CategoriaResponseSample : IExamplesProvider<CategoriaEntity>
+    public class CategoriaResponseSample : IExamplesProvider<CategoriaDto>
     {
-        public CategoriaEntity GetExamples()
+        public CategoriaDto GetExamples()
         {
-            return new CategoriaEntity
+            return new CategoriaDto
             {
                 IdCategoria = 1,
                 NomeCategoria = "Desenvolvimento",
@@ -45,7 +44,6 @@ namespace GoalRoad.Doc.Samples
         {
             return new CategoriaDto
             {
-                IdCategoria = 0,
                 NomeCategoria = "Desenvolvimento",
                 DescricaoCategoria = "Conteúdos relacionados a desenvolvimento de software"
             };

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GoalRoad.Application.UseCases.Interfaces;
 using GoalRoad.Application.DTOs;
@@ -8,6 +9,7 @@ namespace GoalRoad.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize]
     public class TecnologiaController : ControllerBase
     {
         private readonly ITecnologiaUseCase _useCase;

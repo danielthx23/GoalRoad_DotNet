@@ -1,48 +1,44 @@
 using Swashbuckle.AspNetCore.Filters;
 using GoalRoad.Application.DTOs;
-using GoalRoad.Domain.Entities;
 
 namespace GoalRoad.Doc.Samples
 {
-    public class UsuarioResponseListSample : IExamplesProvider<IEnumerable<UsuarioEntity>>
+    public class UsuarioResponseListSample : IExamplesProvider<IEnumerable<UsuarioDto>>
     {
-        public IEnumerable<UsuarioEntity> GetExamples()
+        public IEnumerable<UsuarioDto> GetExamples()
         {
-            return new List<UsuarioEntity>
+            return new List<UsuarioDto>
             {
-                new UsuarioEntity
+                new UsuarioDto
                 {
                     IdUsuario = 1,
                     NomeUsuario = "João Silva",
                     SenhaUsuario = "P@ssw0rd!",
                     EmailUsuario = "joao.silva@example.com",
-                    TokenUsuario = string.Empty,
                     CriadoEmUsuario = DateTime.UtcNow
                 },
-                new UsuarioEntity
+                new UsuarioDto
                 {
                     IdUsuario = 2,
                     NomeUsuario = "Maria Santos",
                     SenhaUsuario = "P@ssw0rd!",
                     EmailUsuario = "maria.santos@example.com",
-                    TokenUsuario = string.Empty,
                     CriadoEmUsuario = DateTime.UtcNow
                 }
             };
         }
     }
 
-    public class UsuarioResponseSample : IExamplesProvider<UsuarioEntity>
+    public class UsuarioResponseSample : IExamplesProvider<UsuarioDto>
     {
-        public UsuarioEntity GetExamples()
+        public UsuarioDto GetExamples()
         {
-            return new UsuarioEntity
+            return new UsuarioDto
             {
                 IdUsuario = 1,
                 NomeUsuario = "João Silva",
                 SenhaUsuario = "P@ssw0rd!",
                 EmailUsuario = "joao.silva@example.com",
-                TokenUsuario = string.Empty,
                 CriadoEmUsuario = DateTime.UtcNow
             };
         }
@@ -57,9 +53,8 @@ namespace GoalRoad.Doc.Samples
                 NomeUsuario = "João Silva",
                 SenhaUsuario = "P@ssw0rd!",
                 EmailUsuario = "joao.silva@example.com",
-                Localizacao = new LocalizacaoDto()
+                Localizacao = new LocalizacaoDto
                 {
-                    IdEndereco = 1,
                     Logradouro = "Rua Exemplo",
                     Numero = "123",
                     Complemento = "Apto 45",

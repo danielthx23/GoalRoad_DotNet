@@ -1,16 +1,15 @@
 using Swashbuckle.AspNetCore.Filters;
 using GoalRoad.Application.DTOs;
-using GoalRoad.Domain.Entities;
 
 namespace GoalRoad.Doc.Samples
 {
-    public class CarreiraResponseListSample : IExamplesProvider<IEnumerable<CarreiraEntity>>
+    public class CarreiraResponseListSample : IExamplesProvider<IEnumerable<CarreiraDto>>
     {
-        public IEnumerable<CarreiraEntity> GetExamples()
+        public IEnumerable<CarreiraDto> GetExamples()
         {
-            return new List<CarreiraEntity>
+            return new List<CarreiraDto>
             {
-                new CarreiraEntity
+                new CarreiraDto
                 {
                     IdCarreira = 1,
                     TituloCarreira = "Desenvolvedor .NET",
@@ -18,7 +17,7 @@ namespace GoalRoad.Doc.Samples
                     LogoCarreira = "https://example.com/logo.png",
                     IdCategoria = 1
                 },
-                new CarreiraEntity
+                new CarreiraDto
                 {
                     IdCarreira = 2,
                     TituloCarreira = "Desenvolvedor Full Stack",
@@ -30,11 +29,11 @@ namespace GoalRoad.Doc.Samples
         }
     }
 
-    public class CarreiraResponseSample : IExamplesProvider<CarreiraEntity>
+    public class CarreiraResponseSample : IExamplesProvider<CarreiraDto>
     {
-        public CarreiraEntity GetExamples()
+        public CarreiraDto GetExamples()
         {
-            return new CarreiraEntity
+            return new CarreiraDto
             {
                 IdCarreira = 1,
                 TituloCarreira = "Desenvolvedor .NET",
@@ -51,7 +50,6 @@ namespace GoalRoad.Doc.Samples
         {
             return new CarreiraDto
             {
-                IdCarreira = 0,
                 TituloCarreira = "Desenvolvedor .NET",
                 DescricaoCarreira = "Roadmap para se tornar um desenvolvedor .NET sênior",
                 LogoCarreira = "https://example.com/logo.png",

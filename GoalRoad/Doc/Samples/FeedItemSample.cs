@@ -1,16 +1,15 @@
 using Swashbuckle.AspNetCore.Filters;
 using GoalRoad.Application.DTOs;
-using GoalRoad.Domain.Entities;
 
 namespace GoalRoad.Doc.Samples
 {
-    public class FeedItemResponseListSample : IExamplesProvider<IEnumerable<FeedItemEntity>>
+    public class FeedItemResponseListSample : IExamplesProvider<IEnumerable<FeedItemDto>>
     {
-        public IEnumerable<FeedItemEntity> GetExamples()
+        public IEnumerable<FeedItemDto> GetExamples()
         {
-            return new List<FeedItemEntity>
+            return new List<FeedItemDto>
             {
-                new FeedItemEntity
+                new FeedItemDto
                 {
                     Id = 101,
                     IdUsuario = 1,
@@ -23,7 +22,7 @@ namespace GoalRoad.Doc.Samples
                     Relevancia = 0.92,
                     DataCriacao = DateTime.UtcNow
                 },
-                new FeedItemEntity
+                new FeedItemDto
                 {
                     Id = 102,
                     IdUsuario = 1,
@@ -40,11 +39,11 @@ namespace GoalRoad.Doc.Samples
         }
     }
 
-    public class FeedItemResponseSample : IExamplesProvider<FeedItemEntity>
+    public class FeedItemResponseSample : IExamplesProvider<FeedItemDto>
     {
-        public FeedItemEntity GetExamples()
+        public FeedItemDto GetExamples()
         {
-            return new FeedItemEntity
+            return new FeedItemDto
             {
                 Id = 101,
                 IdUsuario = 1,
@@ -66,7 +65,6 @@ namespace GoalRoad.Doc.Samples
         {
             return new FeedItemDto
             {
-                Id = 0,
                 IdUsuario = 1,
                 TipoItem = "article",
                 FonteId = 5,

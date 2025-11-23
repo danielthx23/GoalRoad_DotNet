@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using GoalRoad.Application.UseCases.Interfaces;
 using GoalRoad.Application.DTOs;
@@ -13,6 +14,7 @@ namespace GoalRoad.Controllers
         public AuthController(IAutenticarUseCase autenticarUseCase) => _autenticarUseCase = autenticarUseCase;
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<string>> Login(UsuarioLoginDto dto)
         {
             var token = await _autenticarUseCase.AutenticarAsync(dto.Email, dto.Senha);
