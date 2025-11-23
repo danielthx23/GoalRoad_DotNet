@@ -11,7 +11,7 @@ COPY GoalRoad.Domain/GoalRoad.Domain.csproj GoalRoad.Domain/
 COPY GoalRoad.Infrastructure/GoalRoad.Infrastructure.csproj GoalRoad.Infrastructure/
 COPY GoalRoad.Application/GoalRoad.Application.csproj GoalRoad.Application/
 COPY GoalRoad.IoC/GoalRoad.IoC.csproj GoalRoad.IoC/
-COPY GoalRoad.IoC/GoalRoad.Tests.csproj GoalRoad.Tests/
+COPY GoalRoad.Tests/GoalRoad.Tests.csproj GoalRoad.Tests/
 COPY GoalRoad/GoalRoad.csproj GoalRoad/
 
 # Restore NuGet packages
