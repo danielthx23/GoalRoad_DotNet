@@ -8,6 +8,7 @@ COPY GoalRoad.Domain/GoalRoad.Domain.csproj GoalRoad.Domain/
 COPY GoalRoad.Infrastructure/GoalRoad.Infrastructure.csproj GoalRoad.Infrastructure/
 COPY GoalRoad.Application/GoalRoad.Application.csproj GoalRoad.Application/
 COPY GoalRoad.IoC/GoalRoad.IoC.csproj GoalRoad.IoC/
+COPY GoalRoad.IoC/GoalRoad.Tests.csproj GoalRoad.Tests/
 COPY GoalRoad/GoalRoad.csproj GoalRoad/
 
 # Restore NuGet packages
@@ -18,6 +19,7 @@ COPY GoalRoad.Domain/ GoalRoad.Domain/
 COPY GoalRoad.Infrastructure/ GoalRoad.Infrastructure/
 COPY GoalRoad.Application/ GoalRoad.Application/
 COPY GoalRoad.IoC/ GoalRoad.IoC/
+COPY GoalRoad.Tests/ GoalRoad.Tests/
 COPY GoalRoad/ GoalRoad/
 
 # Build the application
