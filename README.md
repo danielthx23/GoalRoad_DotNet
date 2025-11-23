@@ -48,7 +48,11 @@ Esta README foi produzida para entregar o checkpoint e mapear claramente os endp
 
 ## Vídeo de Demonstração
 
-Coloque aqui o link do vídeo demonstrando a solução (máx. 5 minutos).
+[![Thumbnail](https://img.youtube.com/vi/-xJgy2ZP8yE/0.jpg)](https://www.youtube.com/watch?v=-xJgy2ZP8yE)
+
+## Link Deploy
+
+[https://goalroad-dotnet.onrender.com](https://goalroad-dotnet.onrender.com)
 
 ---
 
