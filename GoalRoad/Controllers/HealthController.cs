@@ -4,9 +4,10 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace GoalRoad.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     [AllowAnonymous]
+    [ApiVersion("1.0")]
     public class HealthController : ControllerBase
     {
         private readonly HealthCheckService _healthCheck;
@@ -56,6 +57,8 @@ namespace GoalRoad.Controllers
 
             return report.Status == HealthStatus.Healthy ? Ok(result) : StatusCode(503, result);
         }
+
+        [HttpGet("ping")]
+        public IActionResult Ping() => Ok(new { status = "pong" });
     }
 }
-

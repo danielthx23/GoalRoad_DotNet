@@ -15,6 +15,7 @@ using GoalRoad.Infrastructure.HealthCheck;
 using GoalRoad.Application.UseCases;
 using GoalRoad.Application.UseCases.Interfaces;
 using Swashbuckle.AspNetCore.Filters;
+using DotNetEnv;
 
 namespace GoalRoad.IoC;
 
@@ -22,8 +23,29 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        // NOTE: .env should be loaded by Program.cs before calling AddInfrastructure. Keep a light diagnostic here.
+        try
+        {
+            var loaded = Environment.GetEnvironmentVariable("DOTNETENV_LOADED");
+            // no-op: just a diagnostic placeholder
+        }
+        catch { }
+        
         // If running tests, use InMemory database to avoid requiring SQL Server
         var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? configuration["ASPNETCORE_ENVIRONMENT"];
+        // Diagnostic output to help understand DB selection
+        try
+        {
+            var cfgConn = configuration.GetConnectionString("DefaultConnection");
+            var envConn = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+            var sqlHost = Environment.GetEnvironmentVariable("SQLSERVER_HOST");
+            var sqlUser = Environment.GetEnvironmentVariable("SQLSERVER_USER");
+            Console.WriteLine($"[AddInfrastructure] ASPNETCORE_ENVIRONMENT={env ?? "<null>"}");
+            Console.WriteLine($"[AddInfrastructure] Configuration ConnectionStrings:DefaultConnection={(string.IsNullOrWhiteSpace(cfgConn)?"<empty>":cfgConn)}");
+            Console.WriteLine($"[AddInfrastructure] ENV ConnectionStrings__DefaultConnection={(string.IsNullOrWhiteSpace(envConn)?"<empty>":envConn)}");
+            Console.WriteLine($"[AddInfrastructure] SQLSERVER_HOST={(sqlHost==null?"<null":sqlHost)} SQLSERVER_USER={(sqlUser==null?"<null>":sqlUser)}");
+        }
+        catch { }
         if (string.Equals(env, "Testing", StringComparison.OrdinalIgnoreCase))
         {
             // Use fully-qualified method to ensure extension is found
@@ -32,10 +54,13 @@ public static class DependencyInjection
         else
         {
 
-        // Configura��o de conex�o com SQL Server
-            string? connectionString = configuration.GetConnectionString("DefaultConnection")
-                ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection")
-                ?? Environment.GetEnvironmentVariable("SQLSERVER_CONNECTIONSTRING");
+            // Configuração de conexão com SQL Server
+            // Treat empty string from appsettings as missing so environment variables (e.g. from .env) are honored.
+            string? connectionString = configuration.GetConnectionString("DefaultConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+                connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+            if (string.IsNullOrWhiteSpace(connectionString))
+                connectionString = Environment.GetEnvironmentVariable("SQLSERVER_CONNECTIONSTRING");
 
             if (string.IsNullOrWhiteSpace(connectionString))
             {
@@ -195,43 +220,47 @@ public static class DependencyInjection
     public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
         // Tenta ler de várias fontes: appsettings, variáveis de ambiente com __ ou sem
-        var jwtSecretKey = configuration["Jwt:Key"]
-            ?? Environment.GetEnvironmentVariable("Jwt__Key")
-            ?? configuration["Jwt:SecretKey"]
-            ?? Environment.GetEnvironmentVariable("JWT_SECRET_KEY")
-            ?? Environment.GetEnvironmentVariable("JWT_KEY")
-            ?? "YourSuperSecretKeyThatShouldBeAtLeast32CharactersLongForHS256Algorithm";
-        var jwtIssuer = configuration["Jwt:Issuer"]
-            ?? Environment.GetEnvironmentVariable("Jwt__Issuer")
-            ?? "GoalRoadAPI";
-        var jwtAudience = configuration["Jwt:Audience"]
-            ?? Environment.GetEnvironmentVariable("Jwt__Audience")
-            ?? "GoalRoadClient";
+        // Prefer non-empty values from configuration or environment variables. Some config values may be present but empty,
+        // so use IsNullOrWhiteSpace checks instead of simple null coalescing.
+        string? jwtSecretKey = configuration["Jwt:Key"];
+        if (string.IsNullOrWhiteSpace(jwtSecretKey)) jwtSecretKey = Environment.GetEnvironmentVariable("Jwt__Key");
+        if (string.IsNullOrWhiteSpace(jwtSecretKey)) jwtSecretKey = configuration["Jwt:SecretKey"];
+        if (string.IsNullOrWhiteSpace(jwtSecretKey)) jwtSecretKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+        if (string.IsNullOrWhiteSpace(jwtSecretKey)) jwtSecretKey = Environment.GetEnvironmentVariable("JWT_KEY");
+        if (string.IsNullOrWhiteSpace(jwtSecretKey)) jwtSecretKey = "YourSuperSecretKeyThatShouldBeAtLeast32CharactersLongForHS256Algorithm";
+         var jwtIssuer = configuration["Jwt:Issuer"]
+             ?? Environment.GetEnvironmentVariable("Jwt__Issuer")
+             ?? "GoalRoadAPI";
+         var jwtAudience = configuration["Jwt:Audience"]
+             ?? Environment.GetEnvironmentVariable("Jwt__Audience")
+             ?? "GoalRoadClient";
 
-        services.AddAuthentication(options =>
-        {
-            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-        .AddJwtBearer(options =>
-        {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtIssuer,
-                ValidAudience = jwtAudience,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey)),
-                ClockSkew = TimeSpan.Zero
-            };
-        });
+         var keyBytes = Encoding.UTF8.GetBytes(jwtSecretKey);
 
-        services.AddAuthorization();
+         services.AddAuthentication(options =>
+         {
+             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+         })
+         .AddJwtBearer(options =>
+         {
+             options.TokenValidationParameters = new TokenValidationParameters
+             {
+                 ValidateIssuer = true,
+                 ValidateAudience = true,
+                 ValidateLifetime = true,
+                 ValidateIssuerSigningKey = true,
+                 ValidIssuer = jwtIssuer,
+                 ValidAudience = jwtAudience,
+                 IssuerSigningKey = new SymmetricSecurityKey(keyBytes),
+                 ClockSkew = TimeSpan.Zero
+             };
+         });
 
-        return services;
-    }
+         services.AddAuthorization();
+
+         return services;
+     }
 
     public static IServiceCollection AddHealthChecksConfig(this IServiceCollection services)
     {
@@ -249,4 +278,5 @@ public static class DependencyInjection
 
         return services;
     }
+
 }

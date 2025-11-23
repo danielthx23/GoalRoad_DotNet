@@ -8,7 +8,8 @@ using GoalRoad.Doc.Samples;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioUseCase _useCase;
@@ -42,7 +43,7 @@ namespace GoalRoad.Controllers
         {
             var created = await _useCase.SalvarAsync(dto);
             if (created == null) return BadRequest();
-            return CreatedAtAction(nameof(GetById), new { id = created.IdUsuario }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created.IdUsuario, version = "1.0" }, created);
         }
 
         [HttpPut("{id:int}")]

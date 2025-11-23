@@ -6,7 +6,8 @@ using GoalRoad.Domain.Models;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class TecnologiaController : ControllerBase
     {
         private readonly ITecnologiaUseCase _useCase;
@@ -38,7 +39,7 @@ namespace GoalRoad.Controllers
         public async Task<ActionResult<TecnologiaDto?>> Post(TecnologiaDto dto)
         {
             var created = await _useCase.SalvarAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created?.IdTecnologia }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created?.IdTecnologia, version = "1.0" }, created);
         }
 
         [HttpPut("{id:int}")]

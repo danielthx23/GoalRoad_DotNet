@@ -20,21 +20,18 @@ namespace GoalRoad.Infrastructure.Data.AppData
         {
             base.OnModelCreating(modelBuilder);
 
-            // CARREIRA 1:1 ROADMAP (shared PK)
             modelBuilder.Entity<CarreiraEntity>()
                 .HasOne(c => c.RoadMap)
                 .WithOne(r => r.Carreira)
                 .HasForeignKey<RoadMapEntity>(r => r.IdCarreira)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // CATEGORIA 1:N CARREIRAS
             modelBuilder.Entity<CarreiraEntity>()
                 .HasOne(c => c.Categoria)
                 .WithMany(cat => cat.Carreiras)
                 .HasForeignKey(c => c.IdCategoria)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // ROADMAP <-> ROADMAP_TECNOLOGIA (1:N) and TECNOLOGIA <-> ROADMAP_TECNOLOGIA (1:N)
             modelBuilder.Entity<RoadMapTecnologiaEntity>()
                 .HasKey(rt => new { rt.IdRoadMap, rt.IdTecnologia });
 
@@ -54,7 +51,6 @@ namespace GoalRoad.Infrastructure.Data.AppData
                 .HasIndex(rt => new { rt.IdRoadMap, rt.StepOrder })
                 .IsUnique(false);
 
-            // USUARIO 1:1 FEED (shared PK)
             modelBuilder.Entity<FeedEntity>()
                 .HasKey(f => f.IdUsuario);
 
@@ -64,28 +60,24 @@ namespace GoalRoad.Infrastructure.Data.AppData
                 .HasForeignKey<FeedEntity>(f => f.IdUsuario)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // USUARIO 1:1 Localizacao (optional)
             modelBuilder.Entity<UsuarioEntity>()
                 .HasOne(u => u.Localizacao)
                 .WithOne()
                 .HasForeignKey<UsuarioEntity>(u => u.IdEndereco)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // FEED 1:N FEEDITEM
             modelBuilder.Entity<FeedItemEntity>()
                 .HasOne(fi => fi.Feed)
                 .WithMany(f => f.Items)
                 .HasForeignKey(fi => fi.IdUsuario)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // FEEDITEM -> TECNOLOGIA (optional)
             modelBuilder.Entity<FeedItemEntity>()
                 .HasOne(fi => fi.Tecnologia)
                 .WithMany(t => t.FeedItems)
                 .HasForeignKey(fi => fi.IdTecnologia)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Ensure keys where attributes are not present
             modelBuilder.Entity<RoadMapEntity>()
                 .HasKey(r => r.IdCarreira);
 

@@ -10,7 +10,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class FeedController : ControllerBase
     {
         private readonly IFeedUseCase _useCase;
@@ -35,7 +36,7 @@ namespace GoalRoad.Controllers
         public async Task<ActionResult<FeedDto?>> Post(FeedDto dto)
         {
             var created = await _useCase.SalvarAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created?.IdUsuario }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created?.IdUsuario, version = "1.0" }, created);
         }
 
         [HttpPut("{id:int}")]
@@ -55,7 +56,6 @@ namespace GoalRoad.Controllers
             return Ok(deleted);
         }
 
-        // New endpoint to generate and persist a user's feed from a roadmap
         [HttpPost("generate/{userId:int}/{carreiraId:int}")]
         [SwaggerOperation(Summary = "Gera e persiste o feed do usu�rio a partir de um roadmap")]
         [SwaggerResponseExample(statusCode: 200, typeof(FeedGenerateRequestSample))]

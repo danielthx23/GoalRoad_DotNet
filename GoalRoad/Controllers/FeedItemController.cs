@@ -6,7 +6,8 @@ using GoalRoad.Domain.Models;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class FeedItemController : ControllerBase
     {
         private readonly IFeedItemUseCase _useCase;
@@ -31,7 +32,7 @@ namespace GoalRoad.Controllers
         public async Task<ActionResult<FeedItemDto?>> Post(FeedItemDto dto)
         {
             var created = await _useCase.SalvarAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created?.Id }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created?.Id, version = "1.0" }, created);
         }
 
         [HttpPut("{id:int}")]

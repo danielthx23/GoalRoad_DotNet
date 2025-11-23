@@ -8,8 +8,104 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using DotNetEnv;
+
+try
+{
+    var candidates = new[] {
+        Path.Combine(Directory.GetCurrentDirectory(), ".env"),
+        Path.Combine(Directory.GetCurrentDirectory(), "..", ".env"),
+        Path.Combine(AppContext.BaseDirectory, ".env"),
+        Path.Combine(AppContext.BaseDirectory, "..", ".env")
+    };
+
+    string? loadedPath = null;
+    foreach (var p in candidates)
+    {
+        try
+        {
+            if (File.Exists(p))
+            {
+                Env.Load(p);
+                loadedPath = p;
+                break;
+            }
+        }
+        catch { }
+    }
+
+    if (loadedPath != null)
+        Console.WriteLine($"[DotNetEnv] Loaded .env from {loadedPath}");
+    else
+    {
+        try { Env.Load(); Console.WriteLine("[DotNetEnv] Env.Load() called (default)"); } catch { Console.WriteLine("[DotNetEnv] Env.Load() default attempt failed or no .env found"); }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("[DotNetEnv] Env.Load() failed: " + ex.Message);
+}
+
+try
+{
+    string[] keys = new[] { "ConnectionStrings__DefaultConnection", "SQLSERVER_HOST", "SQLSERVER_PORT", "SQLSERVER_DATABASE", "SQLSERVER_USER", "SQLSERVER_PASSWORD", "ASPNETCORE_ENVIRONMENT" };
+    foreach (var k in keys)
+    {
+        var v = Environment.GetEnvironmentVariable(k);
+    }
+}
+catch { }
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
+
+try
+{
+    string? configured = Environment.GetEnvironmentVariable("ASPNETCORE_URLS") ?? builder.Configuration["ASPNETCORE_URLS"];
+    if (!string.IsNullOrWhiteSpace(configured))
+    {
+        var first = configured.Split(';', ',').Select(s => s.Trim()).FirstOrDefault(s => !string.IsNullOrEmpty(s));
+        if (!string.IsNullOrEmpty(first))
+        {
+            var normal = first.Replace("+", "localhost");
+            if (System.Uri.TryCreate(normal, System.UriKind.Absolute, out var uri) && uri.Port > 0)
+            {
+                bool portFree = true;
+                try
+                {
+                    var listener = new System.Net.Sockets.TcpListener(System.Net.IPAddress.Loopback, uri.Port);
+                    listener.Start();
+                    listener.Stop();
+                }
+                catch
+                {
+                    portFree = false;
+                }
+
+                if (!portFree)
+                {
+                    try
+                    {
+                        Environment.SetEnvironmentVariable("ASPNETCORE_URLS", "http://localhost:0");
+                    }
+                    catch { }
+
+                    builder.WebHost.UseUrls("http://localhost:0");
+                    Console.WriteLine($"[PortCheck] Configured port {uri.Port} is in use. Overriding ASPNETCORE_URLS and falling back to ephemeral port (http://localhost:0).");
+                }
+                else
+                {
+                    Console.WriteLine($"[PortCheck] Configured port {uri.Port} is available.");
+                }
+            }
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine("[PortCheck] Error while checking configured ASPNETCORE_URLS: " + ex.Message);
+}
 
 builder.Services.AddCors(options =>
 {
@@ -21,12 +117,21 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Register infrastructure, application and presentation layers
 builder.Services.AddInfrastructure(builder.Configuration);
+
+try
+{
+    string[] keys = new[] { "ConnectionStrings__DefaultConnection", "SQLSERVER_HOST", "SQLSERVER_PORT", "SQLSERVER_DATABASE", "SQLSERVER_USER", "SQLSERVER_PASSWORD", "ASPNETCORE_ENVIRONMENT" };
+    foreach (var k in keys)
+    {
+        var v = Environment.GetEnvironmentVariable(k);
+    }
+}
+catch { }
+
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddPresentation(builder.Configuration);
 
-// Additional configs
 builder.Services.AddApiVersioningConfig();
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddHealthChecksConfig();
@@ -46,7 +151,6 @@ builder.Services.AddRateLimiter(options =>
     options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 });
 
-// Configure response compression in the web project
 builder.Services.AddResponseCompression(options =>
 {
     options.Providers.Add<BrotliCompressionProvider>();
@@ -65,7 +169,13 @@ builder.Services.Configure<GzipCompressionProviderOptions>(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+try
+{
+    var conn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "<null>";
+    Console.WriteLine($"[DEBUG] ConnectionStrings:DefaultConnection = {conn}");
+}
+catch { }
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -74,7 +184,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowReactApp");
 
-// Serve static files from wwwroot if the directory exists
 var wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
 if (Directory.Exists(wwwrootPath))
 {
@@ -87,12 +196,11 @@ if (Directory.Exists(wwwrootPath))
 
 app.UseRouting();
 
-app.UseAuthentication(); // A ordem importa, tem que ser antes do UseAuthorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseRateLimiter();
 
-// Health Check endpoint
 app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
 {
     ResponseWriter = async (context, report) =>
@@ -123,7 +231,6 @@ app.MapRazorPages();
 
 app.Run();
 
-// Expor Program para testes de integração
 namespace GoalRoad
 {
     public partial class Program { }

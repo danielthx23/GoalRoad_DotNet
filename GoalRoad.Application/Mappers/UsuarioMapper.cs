@@ -19,7 +19,5 @@ namespace GoalRoad.Application.Mappers
             SenhaUsuario = e.SenhaUsuario,
             CriadoEmUsuario = e.CriadoEmUsuario
         };
-
-        // Additional mappers can be added here
     }
 }

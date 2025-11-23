@@ -38,7 +38,6 @@ namespace GoalRoad.Infrastructure.Data.Repositories
             return new PageResultModel<IEnumerable<UsuarioEntity>> { Data = data, Total = total };
         }
 
-        // parameterless overload returning all
         public async Task<PageResultModel<IEnumerable<UsuarioEntity>>> ObterTodasAsync()
         {
             return await ObterTodasAsync(0, int.MaxValue);

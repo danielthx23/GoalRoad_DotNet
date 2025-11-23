@@ -23,12 +23,17 @@ namespace GoalRoad.Application.UseCases
         {
             var user = await _usuarioRepo.ObterPorEmailAsync(email);
             if (user == null) return null;
-            // NOTE: senha should be hashed in real app. Here simple compare for demo
             if (user.SenhaUsuario != senha) return null;
+            
+            string? key = _config["Jwt:Key"];
+            if (string.IsNullOrWhiteSpace(key)) key = Environment.GetEnvironmentVariable("Jwt__Key");
+            if (string.IsNullOrWhiteSpace(key)) key = _config["Jwt:SecretKey"];
+            if (string.IsNullOrWhiteSpace(key)) key = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            if (string.IsNullOrWhiteSpace(key)) key = Environment.GetEnvironmentVariable("JWT_KEY");
+            if (string.IsNullOrWhiteSpace(key)) key = "YourSuperSecretKeyThatShouldBeAtLeast32CharactersLongForHS256Algorithm";
 
-            var key = _config["Jwt:Key"] ?? string.Empty;
-            var issuer = _config["Jwt:Issuer"] ?? string.Empty;
-            var audience = _config["Jwt:Audience"] ?? string.Empty;
+            var issuer = _config["Jwt:Issuer"] ?? Environment.GetEnvironmentVariable("Jwt__Issuer") ?? string.Empty;
+            var audience = _config["Jwt:Audience"] ?? Environment.GetEnvironmentVariable("Jwt__Audience") ?? string.Empty;
             var expiresMinutesStr = _config["Jwt:ExpiresMinutes"] ?? "120";
             int.TryParse(expiresMinutesStr, out var expiresMinutes);
 
@@ -39,7 +44,7 @@ namespace GoalRoad.Application.UseCases
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var keyBytes = Encoding.ASCII.GetBytes(key);
+            var keyBytes = Encoding.UTF8.GetBytes(key!);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
@@ -54,7 +59,3 @@ namespace GoalRoad.Application.UseCases
         }
     }
 }
-
-
-
-

@@ -6,7 +6,8 @@ using GoalRoad.Domain.Models;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class CarreiraController : ControllerBase
     {
         private readonly ICarreiraUseCase _useCase;
@@ -38,7 +39,7 @@ namespace GoalRoad.Controllers
         public async Task<ActionResult<CarreiraDto?>> Post(CarreiraDto dto)
         {
             var created = await _useCase.SalvarAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created?.IdCarreira }, created);
+            return CreatedAtAction(nameof(GetById), new { id = created?.IdCarreira, version = "1.0" }, created);
         }
 
         [HttpPut("{id:int}")]

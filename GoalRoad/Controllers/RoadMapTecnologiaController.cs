@@ -6,7 +6,8 @@ using GoalRoad.Domain.Models;
 namespace GoalRoad.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class RoadMapTecnologiaController : ControllerBase
     {
         private readonly IRoadMapTecnologiaUseCase _useCase;
@@ -31,7 +32,7 @@ namespace GoalRoad.Controllers
         public async Task<ActionResult<RoadMapTecnologiaDto?>> Post(RoadMapTecnologiaDto dto)
         {
             var created = await _useCase.SalvarAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id1 = created?.IdRoadMap, id2 = created?.IdTecnologia }, created);
+            return CreatedAtAction(nameof(GetById), new { id1 = created?.IdRoadMap, id2 = created?.IdTecnologia, version = "1.0" }, created);
         }
 
         [HttpPut("{id1:int}/{id2:int}")]
