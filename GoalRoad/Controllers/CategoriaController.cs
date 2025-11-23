@@ -8,27 +8,27 @@ namespace GoalRoad.Controllers
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class CarreiraController : ControllerBase
+    public class CategoriaController : ControllerBase
     {
-        private readonly ICarreiraUseCase _useCase;
-        public CarreiraController(ICarreiraUseCase useCase) => _useCase = useCase;
+        private readonly ICategoriaUseCase _useCase;
+        public CategoriaController(ICategoriaUseCase useCase) => _useCase = useCase;
 
         [HttpGet]
-        public async Task<ActionResult<PageResultModel<IEnumerable<CarreiraDto>>>> GetAll(int offset = 0, int limit = 10)
+        public async Task<ActionResult<PageResultModel<IEnumerable<CategoriaDto>>>> GetAll(int offset = 0, int limit = 10)
         {
             var result = await _useCase.ObterTodasAsync(offset, limit);
             return Ok(result);
         }
 
         [HttpGet("all")]
-        public async Task<ActionResult<PageResultModel<IEnumerable<CarreiraDto>>>> GetAll()
+        public async Task<ActionResult<PageResultModel<IEnumerable<CategoriaDto>>>> GetAll()
         {
             var result = await _useCase.ObterTodasAsync();
             return Ok(result);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<CarreiraDto?>> GetById(int id)
+        public async Task<ActionResult<CategoriaDto?>> GetById(int id)
         {
             var item = await _useCase.ObterPorIdAsync(id);
             if (item == null) return NotFound();
@@ -36,12 +36,12 @@ namespace GoalRoad.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CarreiraDto?>> Post(CarreiraDto dto)
+        public async Task<ActionResult<CategoriaDto?>> Post(CategoriaDto dto)
         {
             try
             {
                 var created = await _useCase.SalvarAsync(dto);
-                return CreatedAtAction(nameof(GetById), new { id = created?.IdCarreira, version = "1.0" }, created);
+                return CreatedAtAction(nameof(GetById), new { id = created?.IdCategoria, version = "1.0" }, created);
             }
             catch (ArgumentException ex)
             {
@@ -50,9 +50,9 @@ namespace GoalRoad.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult<CarreiraDto?>> Put(int id, CarreiraDto dto)
+        public async Task<ActionResult<CategoriaDto?>> Put(int id, CategoriaDto dto)
         {
-            if (id != dto.IdCarreira) return BadRequest();
+            if (id != dto.IdCategoria) return BadRequest();
             try
             {
                 var updated = await _useCase.AtualizarAsync(dto);
@@ -66,7 +66,7 @@ namespace GoalRoad.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult<CarreiraDto?>> Delete(int id)
+        public async Task<ActionResult<CategoriaDto?>> Delete(int id)
         {
             var deleted = await _useCase.DeletarAsync(id);
             if (deleted == null) return NotFound();
@@ -74,3 +74,4 @@ namespace GoalRoad.Controllers
         }
     }
 }
+

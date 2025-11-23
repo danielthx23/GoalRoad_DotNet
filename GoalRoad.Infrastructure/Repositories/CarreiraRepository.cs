@@ -17,6 +17,14 @@ namespace GoalRoad.Infrastructure.Data.Repositories
 
         public async Task<CarreiraEntity?> AtualizarAsync(CarreiraEntity entity)
         {
+            // Validate Categoria FK if provided to prevent SQL FK violation
+            if (entity.IdCategoria.HasValue)
+            {
+                var exists = await _context.Categorias.AnyAsync(c => c.IdCategoria == entity.IdCategoria.Value);
+                if (!exists)
+                    throw new ArgumentException($"Categoria with Id {entity.IdCategoria.Value} does not exist.", nameof(entity.IdCategoria));
+            }
+
             _context.Carreiras.Update(entity);
             await _context.SaveChangesAsync();
             return entity;
@@ -50,6 +58,14 @@ namespace GoalRoad.Infrastructure.Data.Repositories
 
         public async Task<CarreiraEntity?> SalvarAsync(CarreiraEntity entity)
         {
+            // Validate Categoria FK if provided to prevent SQL FK violation
+            if (entity.IdCategoria.HasValue)
+            {
+                var exists = await _context.Categorias.AnyAsync(c => c.IdCategoria == entity.IdCategoria.Value);
+                if (!exists)
+                    throw new ArgumentException($"Categoria with Id {entity.IdCategoria.Value} does not exist.", nameof(entity.IdCategoria));
+            }
+
             _context.Carreiras.Add(entity);
             await _context.SaveChangesAsync();
             return entity;
