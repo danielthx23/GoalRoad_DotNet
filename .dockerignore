@@ -48,8 +48,3 @@ Thumbs.db
 *.swp
 *.swo
 *~
-
-# Project specific
-GoalRoad.Tests/
-
-

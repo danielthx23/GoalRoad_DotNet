@@ -98,11 +98,10 @@ namespace GoalRoad.Tests.App
             using var client = _factory.CreateClient();
 
             // Act
-            var response = await client.GetAsync("api/Carreira?offset=0&limit=10");
+            var response = await client.GetAsync("api/v1/Carreira?offset=0&limit=10");
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }
-
