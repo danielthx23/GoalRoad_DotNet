@@ -90,5 +90,19 @@ namespace GoalRoad.Controllers
                 return Problem(title: "Erro ao treinar modelo", detail: ex.Message);
             }
         }
+
+        private HateoasResource<FeedDto> CreateHateoasResource(FeedDto? feed)
+        {
+            if (feed == null) return new HateoasResource<FeedDto>(new FeedDto());
+            
+            var resource = new HateoasResource<FeedDto>(feed);
+            resource.AddLink(Url.Action(nameof(GetById), new { id = feed.IdUsuario, version = "1.0" }) ?? "", "self", "GET");
+            resource.AddLink(Url.Action(nameof(Put), new { id = feed.IdUsuario, version = "1.0" }) ?? "", "update", "PUT");
+            resource.AddLink(Url.Action(nameof(Delete), new { id = feed.IdUsuario, version = "1.0" }) ?? "", "delete", "DELETE");
+            resource.AddLink(Url.Action(nameof(GetAll), new { version = "1.0" }) ?? "", "collection", "GET");
+            resource.AddLink(Url.Action(nameof(Generate), new { userId = feed.IdUsuario, carreiraId = 1, version = "1.0" }) ?? "", "generate", "POST");
+            
+            return resource;
+        }
     }
 }
