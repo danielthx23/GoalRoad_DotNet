@@ -42,7 +42,13 @@ namespace GoalRoad.Infrastructure.Data.Repositories
         public async Task<PageResultModel<IEnumerable<CarreiraEntity>>> ObterTodasAsync(int Deslocamento = 0, int RegistrosRetornado = 3)
         {
             var total = await _context.Carreiras.CountAsync();
-            var data = await _context.Carreiras.Skip(Deslocamento).Take(RegistrosRetornado).ToListAsync();
+            var data = await _context.Carreiras
+                .Include(c => c.Categoria)
+                .Include(c => c.RoadMap)
+                    .ThenInclude(r => r.Tecnologias)
+                .Skip(Deslocamento)
+                .Take(RegistrosRetornado)
+                .ToListAsync();
             return new PageResultModel<IEnumerable<CarreiraEntity>> { Data = data, Total = total };
         }
 
@@ -53,7 +59,11 @@ namespace GoalRoad.Infrastructure.Data.Repositories
 
         public async Task<CarreiraEntity?> ObterPorIdAsync(int id)
         {
-            return await _context.Carreiras.Include(c => c.RoadMap).ThenInclude(r => r.Tecnologias).FirstOrDefaultAsync(c => c.IdCarreira == id);
+            return await _context.Carreiras
+                .Include(c => c.Categoria)
+                .Include(c => c.RoadMap)
+                    .ThenInclude(r => r.Tecnologias)
+                .FirstOrDefaultAsync(c => c.IdCarreira == id);
         }
 
         public async Task<CarreiraEntity?> SalvarAsync(CarreiraEntity entity)

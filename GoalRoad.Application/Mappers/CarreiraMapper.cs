@@ -11,7 +11,9 @@ namespace GoalRoad.Application.Mappers
             TituloCarreira = e.TituloCarreira,
             DescricaoCarreira = e.DescricaoCarreira,
             LogoCarreira = e.LogoCarreira,
-            IdCategoria = e.IdCategoria
+            IdCategoria = e.IdCategoria,
+            Categoria = e.Categoria?.ToDto(),
+            RoadMap = e.RoadMap?.ToDto()
         };
 
         public static CarreiraEntity ToEntity(this CarreiraDto d) => new()
