@@ -6,17 +6,16 @@ COPY GoalRoad.Domain/GoalRoad.Domain.csproj GoalRoad.Domain/
 COPY GoalRoad.Infrastructure/GoalRoad.Infrastructure.csproj GoalRoad.Infrastructure/
 COPY GoalRoad.Application/GoalRoad.Application.csproj GoalRoad.Application/
 COPY GoalRoad.IoC/GoalRoad.IoC.csproj GoalRoad.IoC/
-COPY GoalRoad.Tests/GoalRoad.Tests.csproj GoalRoad.Tests/
 COPY GoalRoad/GoalRoad.csproj GoalRoad/
 
-RUN dotnet restore *.sln
+RUN dotnet restore GoalRoad/GoalRoad.csproj
 
 COPY GoalRoad.Domain/ GoalRoad.Domain/
 COPY GoalRoad.Infrastructure/ GoalRoad.Infrastructure/
 COPY GoalRoad.Application/ GoalRoad.Application/
 COPY GoalRoad.IoC/ GoalRoad.IoC/
-COPY GoalRoad.Tests/ GoalRoad.Tests/
 COPY GoalRoad/ GoalRoad/
+COPY GoalRoad.Tests/ GoalRoad.Tests/
 
 # Build the application
 WORKDIR /src/GoalRoad
